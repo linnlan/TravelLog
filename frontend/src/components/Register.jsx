@@ -33,7 +33,7 @@ export default function Register({setShowRegister}) {
             <form onSubmit={handleSubmit}>
                 <input type='text' placeholder='username' ref={nameRef}></input>
                 <input type='email' placeholder='email' ref={emailRef}></input>
-                <input type='text' placeholder='password' ref={passwordRef}></input>
+                <input type='password' placeholder='password' ref={passwordRef}></input>
                 <button className='registerBtn'>Register</button>
                 {success && (<span className='success'>Successful. You can login now</span>)}
                 {error && (<span className='failure'>Something went wrong</span>)}

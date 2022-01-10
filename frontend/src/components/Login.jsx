@@ -3,7 +3,7 @@ import {Room, Cancel} from '@material-ui/icons'
 import { useState, useRef } from 'react';
 import axios from 'axios';
 
-export default function Login({setShowLogin}) {
+export default function Login({setShowLogin,myStorage,setCurrentUser}) {
     const [error, setError] = useState(false);
     const nameRef = useRef();
     const passwordRef = useRef();
@@ -15,7 +15,10 @@ export default function Login({setShowLogin}) {
             password: passwordRef.current.value,
         };
         try{
-            await axios.post('/users/login', user);
+            const res = await axios.post('/users/login', user);
+            myStorage.setItem("user", res.data.username);
+            setCurrentUser(res.data.username);
+            setShowLogin(false);
             setError(false);
         } catch(err){
             setError(true);
@@ -28,11 +31,11 @@ export default function Login({setShowLogin}) {
             </div>
             <form onSubmit={handleSubmit}>
                 <input type='text' placeholder='username' ref={nameRef}></input>
-                <input type='text' placeholder='password' ref={passwordRef}></input>
+                <input type='password' placeholder='password' ref={passwordRef}></input>
                 <button className='loginBtn'>Login</button>
                 {error && (<span className='failure'>Something went wrong</span>)}
             </form>
-            <Cancel className='loginCancel' onClick={()=>setShowLogin(false)}></Cancel>
+            <Cancel className='loginCancel' onClick={()=>setShowLogin(false)}/>
         </div>
     );
 }
