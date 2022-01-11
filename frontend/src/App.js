@@ -11,6 +11,7 @@ function App() {
   const myStorage = window.localStorage;
   const [currentUser, setCurrentUser] = useState(myStorage.getItem('user'));
   const [pins,setPins] = useState([]);
+  const [hotels, setHotels] = useState([]);
   const [currentPlaceId, setCurrentPlaceId] = useState(null);
   const [newPlace, setNewPlace] = useState(null);
   const [title, setTitle] = useState(null);
@@ -36,6 +37,18 @@ function App() {
       }
     };
     getPins();
+  }, []);
+
+  useEffect(()=>{
+    const getHotels = async () => {
+      try{
+        const res = await axios.get('/hotels');
+        setHotels(res.data);
+      }catch(err){
+        console.log('err');
+      }
+    };
+    getHotels();
   }, []);
 
   const handleMarkerClick = (id,lat,long)=>{
@@ -126,6 +139,46 @@ function App() {
         )}
         </>
         ))}
+        {/* hotels */}
+        {pins.map(p=>(
+
+          <><Marker 
+              latitude={p.lat} 
+              longitude={p.long} 
+              offsetLeft={-viewport.zoom * 3.5} 
+              offsetTop={-viewport.zoom * 7}
+            >
+            <Room 
+              style={{fontSize: viewport.zoom * 7, color: p.username===currentUser ? "tomato" : "slateblue", 
+              cursor: "pointer"}}
+              onClick={()=>handleMarkerClick(p._id, p.lat, p.long)}
+            />
+          </Marker>
+          {p._id === currentPlaceId && (
+            <Popup
+              latitude={p.lat}
+              longitude={p.long}
+              closeButton={true}
+              closeOnClick={false}
+              onClose = {()=>setCurrentPlaceId(null)}
+              anchor="left" >
+              <div className="card">
+              <label>Place</label>
+              <h4 className="place">{p.title}</h4>
+    <label>Review</label>
+    <p className='desc'>{p.desc}</p>
+    <label>Rating</label>
+    <div className="stars">
+      { Array(p.rating).fill(<Star className="star"/>)}
+    </div>
+    <label>Information</label>
+    <span className="username">Created by <b>{p.username}</b></span>
+    <span className="date">{format(p.createdAt)}</span>
+  </div>
+</Popup>
+)}
+</>
+))}
         { newPlace && ( <Popup
           latitude={newPlace.lat}
           longitude={newPlace.long}
