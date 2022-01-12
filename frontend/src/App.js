@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ReactMapGL, {Marker, Popup} from 'react-map-gl';
-import {Room, Star} from "@material-ui/icons"
+import {Room, Star, Hotel} from "@material-ui/icons"
 import "./app.css"
 import axios from 'axios';
 import {format} from "timeago.js";
@@ -11,6 +11,7 @@ function App() {
   const myStorage = window.localStorage;
   const [currentUser, setCurrentUser] = useState(myStorage.getItem('user'));
   const [pins,setPins] = useState([]);
+  const [hotels, setHotels] = useState([]);
   const [currentPlaceId, setCurrentPlaceId] = useState(null);
   const [newPlace, setNewPlace] = useState(null);
   const [title, setTitle] = useState(null);
@@ -36,6 +37,18 @@ function App() {
       }
     };
     getPins();
+  }, []);
+
+  useEffect(()=>{
+    const getHotels = async () => {
+      try{
+        const res = await axios.get('/hotels');
+        setHotels(res.data);
+      }catch(err){
+        console.log('err');
+      }
+    };
+    getHotels();
   }, []);
 
   const handleMarkerClick = (id,lat,long)=>{
@@ -126,6 +139,45 @@ function App() {
         )}
         </>
         ))}
+        {/* hotels */}
+        {hotels.map(h=>(
+
+          <><Marker 
+              latitude={h.lat} 
+              longitude={h.long} 
+              offsetLeft={-viewport.zoom * 3.5} 
+              offsetTop={-viewport.zoom * 7}
+            >
+            <Hotel
+              style={{fontSize: viewport.zoom * 5, color: "purple", 
+              cursor: "pointer"}}
+              onClick={()=>handleMarkerClick(h._id, h.lat, h.long)}
+            />
+          </Marker>
+          {h._id === currentPlaceId && (
+            <Popup
+              latitude={h.lat}
+              longitude={h.long}
+              closeButton={true}
+              closeOnClick={false}
+              onClose = {()=>setCurrentPlaceId(null)}
+              anchor="left" >
+              <div className="card">
+              <label>Name</label>
+              <p className='desc'>{h.hname}</p>
+              <label>Address</label>
+              <h4 className="place">{h.address}</h4>
+              <label>Capacity</label>
+              <h4 className="place">{h.capacity}</h4>
+              <label>Rating</label>
+              <div className="stars">
+              { Array(h.rating).fill(<Star className="star"/>)}
+              </div>
+              </div>
+            </Popup>
+          )}
+          </>
+          ))}
         { newPlace && ( <Popup
           latitude={newPlace.lat}
           longitude={newPlace.long}
