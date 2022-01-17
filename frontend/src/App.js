@@ -19,6 +19,7 @@ function App() {
   const [rating, setRating] = useState(0);
   const [showRegister, setShowRegister] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [searchTerm,setSearchTerm] = useState("");
   const [viewport, setViewport] = useState({
     width: "100vw",
     height: "100vh",
@@ -213,7 +214,21 @@ function App() {
         }
         {showRegister && <Register setShowRegister={setShowRegister}/>}
         {showLogin && <Login setShowLogin={setShowLogin} myStorage={myStorage} setCurrentUser={setCurrentUser}/>}
-        
+        {<input type="text" placeholder='Search places for hotels!' className="search" onChange={(e)=>{setSearchTerm(e.target.value);}}/>}
+        {hotels.filter((val)=>{
+          if(searchTerm==="")
+            return "";
+          if(val.address.toLowerCase().includes(searchTerm.toLowerCase()))
+          {
+            return val;
+          }
+        }).map((val,key)=>{
+          return (
+            <div className="searchRes" key={key}>
+              <p>{val.hname}</p>
+            </div>
+          );
+        })}
     </ReactMapGL>
     </div>
   );
