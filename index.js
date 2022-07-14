@@ -21,6 +21,6 @@ app.use("/api/users", userRoute);
 app.use("/api/pins", pinRoute);
 app.use("/api/hotels", hotelRoute);
 
-app.listen(80,()=>{
+app.listen(process.env.PORT || 5000,()=>{
     console.log("Backend server is running!")
 });
