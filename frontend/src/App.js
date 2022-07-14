@@ -184,7 +184,7 @@ function App() {
           longitude={newPlace.long}
           closeButton={true}
           closeOnClick={false}
-          onClose = {()=>setCurrentPlaceId(null)}
+          // onClose = {()=>setCurrentPlaceId(null)}
           anchor="left" 
           onClose={()=> setNewPlace(null)}
           >
