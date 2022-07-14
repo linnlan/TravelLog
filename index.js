@@ -11,7 +11,7 @@ dotenv.config();
 app.use(express.json());
 
 mongoose
-.connect(process.env.MONGO_URL)
+.connect("mongodb+srv://user123:123@cluster0.egz5o.mongodb.net/pin?retryWrites=true&w=majority")
 .then(()=>{
     console.log("MongoDB connected!!")
 })
