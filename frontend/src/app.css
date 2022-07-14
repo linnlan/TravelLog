@@ -83,3 +83,16 @@ input::placeholder, textarea::placeholder{
     top: 10px;
     right: 10px;
 }
+
+.search{
+    margin-top: 20px;
+    width: 250px;
+    height: 40px;
+    font-size: 20px;
+    padding-left: 10px;
+}
+
+.searchRes{
+    padding: 10px 10px;
+    font-size: 20px;
+}
