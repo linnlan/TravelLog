@@ -45,5 +45,5 @@
   "devDependencies": {},
   "author": "",
   "license": "ISC",
-  "proxy": "http://localhost:8800/api"
+  "proxy": "https://travel-backend3.herokuapp.com/api/"
 }
